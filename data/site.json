@@ -1,0 +1,125 @@
+{
+  "siteName": "XikiyWorkshop",
+  "author": "LuviaSeraphina",
+  "domain": "xikiyworkshop.xyz",
+  "heroTitle": "XikiyWorkshop",
+  "motto": "以砺为阶，无限进步！",
+  "blogMotto": "以砺为阶，无限进步！",
+  "intro": "一个在代码与画笔之间游走的创造者，喜欢把想法变成可以触摸的作品。",
+  "profile": {
+    "name": "思琪Xikiy~",
+    "avatar": "/images/avatar.jpg",
+    "signature": "LuviaSeraphina · she/her",
+    "github": "https://github.com/LuviaSeraphina",
+    "githubName": "LuviaSeraphina"
+  },
+  "stats": {
+    "lastUpdated": "2026-08-02",
+    "bucketSize": "1.2 GB"
+  },
+  "currentTarget": {
+    "title": "Current Target",
+    "items": [
+      "完成个人网站 2.0 重构",
+      "深入学习 Next.js 与边缘存储",
+      "每月至少输出两篇技术文章"
+    ]
+  },
+  "techStack": [
+    {
+      "name": "TypeScript",
+      "level": 4,
+      "color": "#3178c6"
+    },
+    {
+      "name": "Next.js",
+      "level": 4,
+      "color": "#0f172a"
+    },
+    {
+      "name": "React",
+      "level": 4,
+      "color": "#61dafb"
+    },
+    {
+      "name": "Tailwind CSS",
+      "level": 5,
+      "color": "#38bdf8"
+    },
+    {
+      "name": "Node.js",
+      "level": 3,
+      "color": "#84cc16"
+    },
+    {
+      "name": "Cloudflare R2",
+      "level": 3,
+      "color": "#f97316"
+    },
+    {
+      "name": "Python",
+      "level": 3,
+      "color": "#facc15"
+    },
+    {
+      "name": "Figma",
+      "level": 4,
+      "color": "#ec4899"
+    }
+  ],
+  "friends": [
+    {
+      "name": "Seraphina Studio",
+      "description": "灵感、插画与手绘日常",
+      "url": "https://example.com/seraphina-studio",
+      "image": "/images/cover-1.jpg"
+    },
+    {
+      "name": "砺阶实验室",
+      "description": "把每一步都变成向上的台阶",
+      "url": "https://example.com/lab",
+      "image": "/images/cover-2.jpg"
+    }
+  ],
+  "treasures": [
+    {
+      "name": "MDN Web Docs",
+      "description": "前端开发最可靠的在线手册",
+      "url": "https://developer.mozilla.org/",
+      "image": "/images/cover-3.jpg"
+    },
+    {
+      "name": "Cloudflare Docs",
+      "description": "R2、Pages 与边缘计算的权威文档",
+      "url": "https://developers.cloudflare.com/",
+      "image": "/images/cover-4.jpg"
+    }
+  ],
+  "nav": [
+    {
+      "label": "首页",
+      "href": "/"
+    },
+    {
+      "label": "博客",
+      "href": "/blog/"
+    },
+    {
+      "label": "云盘",
+      "href": "/cloud/"
+    },
+    {
+      "label": "友链",
+      "href": "/friends/"
+    }
+  ],
+  "footerText": "© 2026 LuviaSeraphina. All rights reserved",
+  "heroImages": {
+    "home": "/images/hero-home.jpg",
+    "blog": "/images/blog-hero.jpg",
+    "timeline": "/images/timeline-hero.jpg",
+    "cloud": "/images/cloud-hero.jpg",
+    "friends": "/images/cover-1.jpg"
+  },
+  "updatedAt": "2026-08-02"
+}

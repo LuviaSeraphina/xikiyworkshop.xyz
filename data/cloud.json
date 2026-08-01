@@ -1,0 +1,60 @@
+{
+  "bucket": "xikiy-bucket",
+  "bucketSize": "1.2 GB",
+  "tree": [
+    {
+      "name": "xikiy-bucket/",
+      "type": "folder",
+      "children": [
+        {
+          "name": "照片/",
+          "type": "folder",
+          "children": [
+            {
+              "name": "2026-旅行手账.jpg",
+              "type": "file",
+              "url": "https://example.com/r2/2026-旅行手账.jpg",
+              "size": "3.4 MB"
+            },
+            {
+              "name": "插画练习.png",
+              "type": "file",
+              "url": "https://example.com/r2/插画练习.png",
+              "size": "1.1 MB"
+            }
+          ]
+        },
+        {
+          "name": "文档/",
+          "type": "folder",
+          "children": [
+            {
+              "name": "网站需求说明.md",
+              "type": "file",
+              "url": "https://example.com/r2/网站需求说明.md",
+              "size": "28 KB"
+            },
+            {
+              "name": "读书笔记.pdf",
+              "type": "file",
+              "url": "https://example.com/r2/读书笔记.pdf",
+              "size": "2.2 MB"
+            }
+          ]
+        },
+        {
+          "name": "项目/",
+          "type": "folder",
+          "children": [
+            {
+              "name": "xikiy-workshop.zip",
+              "type": "file",
+              "url": "https://example.com/r2/xikiy-workshop.zip",
+              "size": "12.6 MB"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
