@@ -25,7 +25,7 @@ async function refreshBusuanzi() {
       const display =
         value && value !== BANNED_TEXT ? value : "—";
       document
-        .querySelectorAll(`#${key}`)
+        .querySelectorAll(`#busuanzi_value_${key}`)
         .forEach((element) => {
           element.textContent = display;
         });

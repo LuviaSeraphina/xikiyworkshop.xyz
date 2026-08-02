@@ -59,7 +59,7 @@ export default async function BlogPostPage({
     <>
       <section
         data-nav-hero
-        className="relative h-[calc(100vh*3/7)] min-h-[280px] overflow-hidden"
+        className="relative z-10 h-[calc(100vh*3/7)] min-h-[280px] overflow-hidden"
       >
         <Image
           src={post.cover}
@@ -72,8 +72,8 @@ export default async function BlogPostPage({
         <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-ink/10 to-paper" />
       </section>
 
-      <section className="paper-bg pb-16 pt-8">
-        <div className="mx-auto max-w-6xl px-4 md:px-6">
+      <section className="paper-bg -mt-[200px] pb-16 pt-8">
+        <div className="relative z-20 mx-auto max-w-6xl px-4 md:px-6">
           <Link
             href="/blog/"
             className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-orange"

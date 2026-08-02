@@ -51,7 +51,7 @@ export default async function BlogPage() {
 
       <section className="relative z-10 rounded-t-[2.5rem] border-t-2 border-dashed border-line bg-paper pb-16 pt-10">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 md:px-6 lg:grid-cols-[320px_1fr]">
-          <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+          <aside className="order-2 space-y-5 lg:order-1 lg:sticky lg:top-24 lg:self-start">
             <ProfileCard
               profile={site.profile}
               postCount={posts.length}
@@ -64,7 +64,7 @@ export default async function BlogPage() {
             <SiteInfoCard lastUpdated={site.stats.lastUpdated} />
           </aside>
 
-          <div className="space-y-6">
+          <div className="order-1 space-y-6 lg:order-2">
             <div className="flex items-center justify-between">
               <h2 className="font-hand text-4xl leading-none">全部文章</h2>
               <span className="rounded-xl bg-sky/10 px-3 py-1 text-sm font-semibold text-sky">
