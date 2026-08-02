@@ -8,7 +8,7 @@
   "intro": "一个在代码与画笔之间游走的创造者，喜欢把想法变成可以触摸的作品。",
   "profile": {
     "name": "思琪Xikiy~",
-    "avatar": "/images/avatar.jpg",
+    "avatar": "/images/IMG_1765.JPG-cropped.jpg",
     "signature": "LuviaSeraphina · she/her",
     "github": "https://github.com/LuviaSeraphina",
     "githubName": "LuviaSeraphina"
@@ -20,50 +20,50 @@
   "currentTarget": {
     "title": "Current Target",
     "items": [
-      "完成个人网站 2.0 重构",
-      "深入学习 Next.js 与边缘存储",
-      "每月至少输出两篇技术文章"
+      "28考研 走最长的路11408",
+      "MySQL与Redis学习",
+      "Golang学习"
     ]
   },
   "techStack": [
     {
-      "name": "TypeScript",
-      "level": 4,
+      "name": "Langchain",
+      "level": 1,
       "color": "#3178c6"
-    },
-    {
-      "name": "Next.js",
-      "level": 4,
-      "color": "#0f172a"
-    },
-    {
-      "name": "React",
-      "level": 4,
-      "color": "#61dafb"
-    },
-    {
-      "name": "Tailwind CSS",
-      "level": 5,
-      "color": "#38bdf8"
-    },
-    {
-      "name": "Node.js",
-      "level": 3,
-      "color": "#84cc16"
-    },
-    {
-      "name": "Cloudflare R2",
-      "level": 3,
-      "color": "#f97316"
     },
     {
       "name": "Python",
       "level": 3,
+      "color": "#0f172a"
+    },
+    {
+      "name": "MySQL",
+      "level": 1,
+      "color": "#61dafb"
+    },
+    {
+      "name": "Shell",
+      "level": 1,
+      "color": "#38bdf8"
+    },
+    {
+      "name": "Java",
+      "level": 1,
+      "color": "#84cc16"
+    },
+    {
+      "name": "Cloudflare R2",
+      "level": 1,
+      "color": "#f97316"
+    },
+    {
+      "name": "RAG知识库",
+      "level": 1,
       "color": "#facc15"
     },
     {
-      "name": "Figma",
-      "level": 4,
+      "name": "MCP协议",
+      "level": 1,
       "color": "#ec4899"
     }
   ],
@@ -83,16 +83,10 @@
   ],
   "treasures": [
     {
-      "name": "MDN Web Docs",
-      "description": "前端开发最可靠的在线手册",
-      "url": "https://developer.mozilla.org/",
+      "name": "regex101",
+      "description": "测试正则表达式的匹配是否正常",
+      "url": "https://regex101.com/",
       "image": "/images/cover-3.jpg"
-    },
-    {
-      "name": "Cloudflare Docs",
-      "description": "R2、Pages 与边缘计算的权威文档",
-      "url": "https://developers.cloudflare.com/",
-      "image": "/images/cover-4.jpg"
     }
   ],
   "nav": [
@@ -118,7 +112,7 @@
     "home": "/images/hero-home.jpg",
     "blog": "/images/blog-hero.jpg",
     "timeline": "/images/timeline-hero.jpg",
-    "cloud": "/images/cloud-hero.jpg",
+    "cloud": "/images/cloud-hero-v2.jpg",
     "friends": "/images/cover-1.jpg"
   },
   "updatedAt": "2026-08-02"
