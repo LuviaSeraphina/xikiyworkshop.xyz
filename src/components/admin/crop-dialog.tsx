@@ -6,7 +6,12 @@ import "react-easy-crop/react-easy-crop.css";
 import { Crop, X } from "lucide-react";
 import { PrimaryButton } from "./ui";
 
-async function cropImage(src: string, area: Area): Promise<Blob> {
+async function cropImage(
+  src: string,
+  area: Area,
+  mime: string,
+  quality?: number
+): Promise<Blob> {
   const image = await new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -33,10 +38,32 @@ async function cropImage(src: string, area: Area): Promise<Blob> {
     canvas.toBlob(
       (blob) =>
         blob ? resolve(blob) : reject(new Error("导出图片失败")),
-      "image/jpeg",
-      0.92
+      mime,
+      quality
     );
   });
+}
+
+function getOutputFormat(file: File) {
+  const lower = file.name.toLowerCase();
+  if (file.type === "image/png" || lower.endsWith(".png")) {
+    return { mime: "image/png", ext: ".png" };
+  }
+  if (file.type === "image/webp" || lower.endsWith(".webp")) {
+    return { mime: "image/webp", ext: ".webp", quality: 0.92 };
+  }
+  if (
+    file.type === "image/jpeg" ||
+    lower.endsWith(".jpeg") ||
+    lower.endsWith(".jpg")
+  ) {
+    return {
+      mime: "image/jpeg",
+      ext: lower.endsWith(".jpeg") ? ".jpeg" : ".jpg",
+      quality: 0.92,
+    };
+  }
+  return { mime: "image/jpeg", ext: ".jpg", quality: 0.92 };
 }
 
 type CropDialogProps = {
@@ -70,9 +97,15 @@ export default function CropDialog({
     if (!pixels || busy) return;
     setBusy(true);
     try {
-      const blob = await cropImage(url, pixels);
-      const name = `${file.name.replace(/\.\w+$/, "")}-cropped.jpg`;
-      await onSaved(new File([blob], name, { type: "image/jpeg" }));
+      const format = getOutputFormat(file);
+      const blob = await cropImage(
+        url,
+        pixels,
+        format.mime,
+        format.quality
+      );
+      const name = `${file.name.replace(/\.\w+$/, "")}${format.ext}`;
+      await onSaved(new File([blob], name, { type: format.mime }));
       onClose();
     } finally {
       setBusy(false);

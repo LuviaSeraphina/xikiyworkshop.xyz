@@ -51,7 +51,7 @@ export default function SiteHeader({
     );
     heroElements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);

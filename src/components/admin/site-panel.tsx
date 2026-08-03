@@ -174,13 +174,6 @@ export default function SitePanel({
               onChange={(event) => setStats("lastUpdated", event.target.value)}
             />
           </Field>
-          <Field label="R2 桶大小">
-            <input
-              className={inputClass}
-              value={site.stats.bucketSize}
-              onChange={(event) => setStats("bucketSize", event.target.value)}
-            />
-          </Field>
         </div>
       </PanelCard>
 

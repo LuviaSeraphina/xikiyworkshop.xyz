@@ -1,8 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import matter from "gray-matter";
-import { formatDateValue } from "@/lib/format";
+import { getAllPosts, getPostFilePath } from "@/lib/posts";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
@@ -17,26 +16,17 @@ export async function GET() {
   const denied = devBlocked();
   if (denied) return denied;
 
-  const files = (await fs.readdir(postsDir)).filter((file) =>
-    file.endsWith(".md")
-  );
-  const posts = await Promise.all(
-    files.map(async (file) => {
-      const raw = await fs.readFile(path.join(postsDir, file), "utf-8");
-      const { data, content } = matter(raw);
-      return {
-        slug: String(data.slug ?? file.replace(/\.md$/, "")),
-        title: String(data.title ?? ""),
-        date: formatDateValue(data.date),
-        updated: formatDateValue(data.updated),
-        category: String(data.category ?? ""),
-        tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-        cover: String(data.cover ?? ""),
-        excerpt: String(data.excerpt ?? ""),
-        content,
-      };
-    })
-  );
+  const posts = (await getAllPosts()).map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    updated: post.updated ?? "",
+    category: post.category,
+    tags: post.tags,
+    cover: post.cover,
+    excerpt: post.excerpt,
+    content: post.content,
+  }));
 
   return NextResponse.json({ posts });
 }
@@ -87,11 +77,25 @@ export async function POST(request: Request) {
   }
 
   const slug = payload.slug.replace(/[^\w\u4e00-\u9fa5-]/g, "-");
-  await fs.writeFile(
-    path.join(postsDir, `${slug}.md`),
-    toMarkdown({ ...payload, slug }),
-    "utf-8"
-  );
+  const [year, month, day] = (
+    payload.date || new Date().toISOString().slice(0, 10)
+  ).split("-");
+  if (!year || !month || !day) {
+    return NextResponse.json(
+      { error: "发布时间格式应为 YYYY-MM-DD" },
+      { status: 400 }
+    );
+  }
+
+  const dir = path.join(postsDir, year, month, day);
+  const target = path.join(dir, `${slug}.md`);
+  const existing = await getPostFilePath(slug);
+  if (existing && existing !== target) {
+    await fs.unlink(existing);
+  }
+
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(target, toMarkdown({ ...payload, slug }), "utf-8");
 
   return NextResponse.json({ ok: true, slug });
 }
@@ -106,11 +110,11 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "缺少 slug" }, { status: 400 });
   }
 
-  try {
-    await fs.unlink(path.join(postsDir, `${slug}.md`));
-  } catch {
+  const file = await getPostFilePath(slug);
+  if (!file) {
     return NextResponse.json({ error: "文章不存在" }, { status: 404 });
   }
+  await fs.unlink(file);
 
   return NextResponse.json({ ok: true });
 }

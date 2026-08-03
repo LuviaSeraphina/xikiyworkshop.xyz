@@ -43,7 +43,7 @@ DEVELOPER_MODE=false npm run build
 ## 目录结构
 
 ```text
-content/posts/   文章（Markdown + frontmatter）
+content/posts/   文章（Markdown + frontmatter，按 年/月/日 组织）
 data/site.json   站点配置、个人信息、友链、技术栈
 data/cloud.json  云盘目录树
 public/images/   图片素材

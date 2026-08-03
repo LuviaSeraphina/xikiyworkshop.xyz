@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FilePlus, Save, Trash2 } from "lucide-react";
 import {
   DangerButton,
@@ -11,17 +11,23 @@ import {
 } from "./ui";
 import type { AdminPost, PostListItem } from "./types";
 
-const emptyPost: AdminPost = {
+const today = () => {
+  const now = new Date();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+
+const createEmptyPost = (): AdminPost => ({
   slug: "",
   title: "",
-  date: new Date().toISOString().slice(0, 10),
+  date: today(),
   updated: "",
   category: "",
   tags: "",
-  cover: "/images/cover-1.jpg",
+  cover: "/images/blog-hero.jpg",
   excerpt: "",
   content: "",
-};
+});
 
 export default function PostsPanel({
   initialPosts,
@@ -29,8 +35,20 @@ export default function PostsPanel({
   initialPosts: PostListItem[];
 }) {
   const [posts, setPosts] = useState<PostListItem[]>(initialPosts);
-  const [form, setForm] = useState<AdminPost>(emptyPost);
+  const [form, setForm] = useState<AdminPost>(() => createEmptyPost());
   const [busy, setBusy] = useState(false);
+  const dateTouched = useRef(false);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (dateTouched.current) return;
+      const next = today();
+      setForm((current) =>
+        current.date === next ? current : { ...current, date: next }
+      );
+    }, 30_000);
+    return () => window.clearInterval(id);
+  }, []);
 
   const load = async () => {
     const res = await fetch("/api/dev/posts");
@@ -81,9 +99,10 @@ export default function PostsPanel({
             >
               <button
                 type="button"
-                onClick={() =>
-                  setForm({ ...post, tags: post.tags.join(", ") })
-                }
+                onClick={() => {
+                  dateTouched.current = true;
+                  setForm({ ...post, tags: post.tags.join(", ") });
+                }}
                 className="min-w-0 flex-1 text-left"
               >
                 <p className="truncate text-sm font-semibold">{post.title}</p>
@@ -177,7 +196,12 @@ export default function PostsPanel({
             <Save className="mr-2 inline h-4 w-4" />
             {busy ? "保存中..." : "保存文章"}
           </PrimaryButton>
-          <DangerButton onClick={() => setForm(emptyPost)}>
+          <DangerButton
+            onClick={() => {
+              dateTouched.current = false;
+              setForm(createEmptyPost());
+            }}
+          >
             <FilePlus className="mr-2 inline h-4 w-4" />
             新建
           </DangerButton>

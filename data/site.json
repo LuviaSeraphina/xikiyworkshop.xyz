@@ -8,13 +8,13 @@
   "intro": "一个在代码与画笔之间游走的创造者，喜欢把想法变成可以触摸的作品。",
   "profile": {
     "name": "思琪Xikiy~",
-    "avatar": "/images/IMG_1765.JPG-cropped.jpg",
+    "avatar": "/images/profile.jpg",
     "signature": "LuviaSeraphina · she/her",
     "github": "https://github.com/LuviaSeraphina",
     "githubName": "LuviaSeraphina"
   },
   "stats": {
-    "lastUpdated": "2026-08-02",
+    "lastUpdated": "2026-08-04",
     "bucketSize": "1.2 GB"
   },
   "currentTarget": {
@@ -67,26 +67,13 @@
       "color": "#ec4899"
     }
   ],
-  "friends": [
-    {
-      "name": "Seraphina Studio",
-      "description": "灵感、插画与手绘日常",
-      "url": "https://example.com/seraphina-studio",
-      "image": "/images/cover-1.jpg"
-    },
-    {
-      "name": "砺阶实验室",
-      "description": "把每一步都变成向上的台阶",
-      "url": "https://example.com/lab",
-      "image": "/images/cover-2.jpg"
-    }
-  ],
+  "friends": [],
   "treasures": [
     {
       "name": "regex101",
       "description": "测试正则表达式的匹配是否正常",
       "url": "https://regex101.com/",
-      "image": "/images/cover-3.jpg"
+      "image": "/images/regex101.png"
     }
   ],
   "nav": [
@@ -113,7 +100,7 @@
     "blog": "/images/blog-hero.jpg",
     "timeline": "/images/timeline-hero.jpg",
     "cloud": "/images/cloud-hero-v2.jpg",
-    "friends": "/images/cover-1.jpg"
+    "friends": "/images/friends.jpg"
   },
   "updatedAt": "2026-08-02"
 }

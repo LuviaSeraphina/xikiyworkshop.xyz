@@ -6,8 +6,22 @@ import { formatDateValue } from "./format";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
-function toMeta(fileName: string, data: Record<string, unknown>): PostMeta {
-  const fallback = fileName.replace(/\.md$/, "");
+async function listMarkdownFiles(dir: string): Promise<string[]> {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  const files: string[] = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listMarkdownFiles(fullPath)));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
+function toMeta(filePath: string, data: Record<string, unknown>): PostMeta {
+  const fallback = path.basename(filePath, ".md");
   return {
     slug: String(data.slug ?? fallback),
     title: String(data.title ?? fallback),
@@ -17,27 +31,36 @@ function toMeta(fileName: string, data: Record<string, unknown>): PostMeta {
     tags: Array.isArray(data.tags)
       ? data.tags.map((tag) => String(tag))
       : [],
-    cover: String(data.cover ?? "/images/cover-1.jpg"),
+    cover: String(data.cover ?? "/images/blog-hero.jpg"),
     excerpt: String(data.excerpt ?? ""),
   };
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  const files = (await fs.readdir(postsDir)).filter((file) =>
-    file.endsWith(".md")
-  );
+  const files = await listMarkdownFiles(postsDir);
 
   const posts = await Promise.all(
-    files.map(async (file) => {
-      const raw = await fs.readFile(path.join(postsDir, file), "utf-8");
+    files.map(async (filePath) => {
+      const raw = await fs.readFile(filePath, "utf-8");
       const { data, content } = matter(raw);
-      return { ...toMeta(file, data), content };
+      return { ...toMeta(filePath, data), content };
     })
   );
 
   return posts.sort(
     (a, b) => b.date.localeCompare(a.date) || b.title.localeCompare(a.title)
   );
+}
+
+export async function getPostFilePath(slug: string): Promise<string | null> {
+  const files = await listMarkdownFiles(postsDir);
+  for (const filePath of files) {
+    const raw = await fs.readFile(filePath, "utf-8");
+    const { data } = matter(raw);
+    const fileSlug = String(data.slug ?? path.basename(filePath, ".md"));
+    if (fileSlug === slug) return filePath;
+  }
+  return null;
 }
 
 export async function getPostSummaries(): Promise<PostSummary[]> {
