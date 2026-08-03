@@ -25,7 +25,7 @@ async function refreshBusuanzi() {
       const display =
         value && value !== BANNED_TEXT ? value : "—";
       document
-        .querySelectorAll(`#busuanzi_value_${key}`)
+        .querySelectorAll(`#${key}`)
         .forEach((element) => {
           element.textContent = display;
         });
@@ -55,7 +55,7 @@ export default function Busuanzi({ mode }: BusuanziProps) {
           <span>
             访客{" "}
             <span
-              id="busuanzi_value_site_uv"
+              id="busuanzi_site_uv"
               className="font-semibold text-orange"
             >
               0
@@ -64,7 +64,7 @@ export default function Busuanzi({ mode }: BusuanziProps) {
           <span>
             浏览{" "}
             <span
-              id="busuanzi_value_site_pv"
+              id="busuanzi_site_pv"
               className="font-semibold text-sky"
             >
               0
@@ -75,7 +75,7 @@ export default function Busuanzi({ mode }: BusuanziProps) {
         <span>
           阅读{" "}
           <span
-            id="busuanzi_value_page_pv"
+            id="busuanzi_page_pv"
             className="font-semibold text-orange"
           >
             0
