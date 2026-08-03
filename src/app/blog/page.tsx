@@ -37,13 +37,15 @@ export default async function BlogPage() {
         data-nav-hero
         className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center text-white"
       >
-        <p className="font-hand text-2xl text-sun">welcome to my corner</p>
-        <h1 className="hero-title-shadow mt-2 font-hand text-6xl leading-none md:text-8xl">
-          Xikiy‘s blogs
-        </h1>
-        <p className="mt-4 text-xl text-white/90 md:text-2xl">
-          {site.blogMotto}
-        </p>
+        <div className="-translate-y-16">
+          <p className="font-hand text-2xl text-sun">welcome to my corner</p>
+          <h1 className="hero-title-shadow mt-2 font-hand text-6xl leading-none md:text-8xl">
+            Xikiy‘s blogs
+          </h1>
+          <p className="mt-4 text-xl text-white/90 md:text-2xl">
+            {site.blogMotto}
+          </p>
+        </div>
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <ArrowDown className="scroll-hint h-7 w-7" />
         </div>

@@ -8,6 +8,7 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const tags = await getAllTags();
+  if (tags.length === 0) return [{ tag: "未分类" }];
   return tags.map((tag) => ({ tag }));
 }
 

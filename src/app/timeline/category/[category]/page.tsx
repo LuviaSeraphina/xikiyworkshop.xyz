@@ -8,6 +8,7 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();
+  if (categories.length === 0) return [{ category: "未分类" }];
   return categories.map((category) => ({ category }));
 }
 

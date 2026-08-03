@@ -10,6 +10,7 @@ import {
   inputClass,
 } from "./ui";
 import type { AdminPost, PostListItem } from "./types";
+import { slugify } from "@/lib/format";
 
 const today = () => {
   const now = new Date();
@@ -52,6 +53,11 @@ export default function PostsPanel({
 
   const load = async () => {
     const res = await fetch("/api/dev/posts");
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      window.alert(data.error ?? `加载文章列表失败（${res.status}）`);
+      return;
+    }
     const data = await res.json();
     setPosts(data.posts ?? []);
   };
@@ -63,7 +69,7 @@ export default function PostsPanel({
   const save = async () => {
     setBusy(true);
     try {
-      await fetch("/api/dev/posts", {
+      const res = await fetch("/api/dev/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,6 +80,11 @@ export default function PostsPanel({
             .filter(Boolean),
         }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        window.alert(data.error ?? "保存失败，请检查必填项");
+        return;
+      }
       await load();
     } finally {
       setBusy(false);
@@ -129,7 +140,11 @@ export default function PostsPanel({
             <input
               className={inputClass}
               value={form.title}
-              onChange={(event) => set("title", event.target.value)}
+              onChange={(event) => {
+                const title = event.target.value;
+                set("title", title);
+                if (!form.slug.trim()) set("slug", slugify(title));
+              }}
             />
           </Field>
           <Field label="Slug">

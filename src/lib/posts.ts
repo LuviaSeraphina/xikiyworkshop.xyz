@@ -7,7 +7,13 @@ import { formatDateValue } from "./format";
 const postsDir = path.join(process.cwd(), "content", "posts");
 
 async function listMarkdownFiles(dir: string): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
+  }
   const files: string[] = [];
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);

@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
 import { getAllPosts, getPostFilePath } from "@/lib/posts";
+import { slugify } from "@/lib/format";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
@@ -44,39 +45,40 @@ type PostPayload = {
 };
 
 function toMarkdown(payload: PostPayload) {
-  const tags =
-    payload.tags.length > 0
-      ? `\ntags: [${payload.tags
-          .map((tag) => `"${tag.replace(/"/g, '\\"')}"`)
-          .join(", ")}]`
-      : "";
-  return `---
-title: ${payload.title.replace(/\n/g, " ")}
-slug: ${payload.slug}
-date: ${payload.date}
-${payload.updated ? `updated: ${payload.updated}` : ""}
-category: ${payload.category}${tags}
-cover: ${payload.cover}
-excerpt: ${payload.excerpt.replace(/\n/g, " ")}
----
+  const frontmatter: Record<string, string | string[]> = {
+    title: payload.title.replace(/\n/g, " ").trim(),
+    slug: payload.slug,
+    date: payload.date,
+    category: payload.category || "未分类",
+    cover: payload.cover,
+    excerpt: payload.excerpt.replace(/\n/g, " ").trim(),
+  };
+  if (payload.updated) frontmatter.updated = payload.updated;
+  if (payload.tags.length > 0) frontmatter.tags = payload.tags;
 
-${payload.content.trim()}
-`;
+  const yaml = Object.entries(frontmatter)
+    .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
+    .join("\n");
+
+  return `---\n${yaml}\n---\n\n${payload.content.trim()}\n`;
 }
+
 
 export async function POST(request: Request) {
   const denied = devBlocked();
   if (denied) return denied;
 
   const payload = (await request.json()) as PostPayload;
-  if (!payload.slug || !payload.title) {
+  if (!payload.title?.trim()) {
     return NextResponse.json(
-      { error: "slug 和 title 不能为空" },
+      { error: "标题不能为空" },
       { status: 400 }
     );
   }
 
-  const slug = payload.slug.replace(/[^\w\u4e00-\u9fa5-]/g, "-");
+  const rawSlug = payload.slug.trim() || slugify(payload.title) || "post";
+  const slug =
+    rawSlug.replace(/[^\w\u4e00-\u9fa5-]/g, "-").replace(/-+/g, "-") || "post";
   const [year, month, day] = (
     payload.date || new Date().toISOString().slice(0, 10)
   ).split("-");

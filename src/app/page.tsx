@@ -32,7 +32,7 @@ export default async function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/25 to-paper" />
 
-        <div className="relative z-10 mx-auto max-w-4xl -translate-y-[15px] px-6 pt-20 text-center text-white">
+        <div className="relative z-10 mx-auto max-w-4xl -translate-y-[35px] px-6 pt-20 text-center text-white">
           <Reveal>
             <p className="font-hand text-2xl text-sun md:text-3xl">
               Hi, this is
@@ -63,7 +63,7 @@ export default async function HomePage() {
           </Reveal>
         </div>
 
-        <div className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-white">
+        <div className="absolute bottom-[68px] left-1/2 z-10 -translate-x-1/2 text-white">
           <ArrowDown className="scroll-hint h-6 w-6" />
         </div>
       </section>

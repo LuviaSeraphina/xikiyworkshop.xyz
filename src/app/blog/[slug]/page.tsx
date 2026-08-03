@@ -10,6 +10,7 @@ import TargetCard from "@/components/target-card";
 import TocCard from "@/components/toc-card";
 import { getSiteConfig } from "@/lib/data";
 import { extractHeadings } from "@/lib/markdown";
+import { decodeParam } from "@/lib/format";
 import {
   getAllCategories,
   getAllPosts,
@@ -21,6 +22,7 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
+  if (posts.length === 0) return [{ slug: "_empty" }];
   return posts.map((post) => ({ slug: post.slug }));
 }
 
@@ -29,7 +31,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeParam(rawSlug);
   const post = await getPostBySlug(slug);
   return {
     title: post ? post.title : "文章不存在",
@@ -42,7 +45,8 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeParam(rawSlug);
   const [site, post, categories, tags] = await Promise.all([
     getSiteConfig(),
     getPostBySlug(slug),
