@@ -2,19 +2,40 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowDown,
+  ArrowUpRight,
   Cloud,
   Feather,
   PenTool,
   Rocket,
+  Star,
 } from "lucide-react";
+import GithubIcon from "@/components/github-icon";
 import Reveal from "@/components/reveal";
 import Typewriter from "@/components/typewriter";
 import { getSiteConfig } from "@/lib/data";
 import { getPostSummaries } from "@/lib/posts";
+import { getProjects } from "@/lib/projects";
+
+const languageColors: Record<string, string> = {
+  Python: "#3572A5",
+  TypeScript: "#3178C6",
+  JavaScript: "#f1e05a",
+  Java: "#b07219",
+  Shell: "#89e051",
+  Go: "#00ADD8",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  Vue: "#41b883",
+  Rust: "#dea584",
+};
+
+const languageColor = (language: string) =>
+  languageColors[language] ?? "#f97316";
 
 export default async function HomePage() {
   const site = await getSiteConfig();
   const posts = await getPostSummaries();
+  const projects = await getProjects(site.profile.githubName);
 
   return (
     <div className="pb-16">
@@ -80,7 +101,7 @@ export default async function HomePage() {
                 alt={site.profile.name}
                 width={220}
                 height={140}
-                className="w-full rounded-2xl border-2 border-line object-cover"
+                className="mx-auto w-full max-w-[280px] rounded-2xl border-2 border-line object-cover"
               />
               <h2 className="mt-4 font-hand text-4xl">{site.profile.name}</h2>
               <p className="mt-2 text-sm text-muted">{site.profile.signature}</p>
@@ -163,6 +184,65 @@ export default async function HomePage() {
           </div>
         </Reveal>
       </section>
+
+      {projects.length > 0 && (
+        <section className="mx-auto max-w-6xl px-5 py-16 md:px-8">
+          <Reveal>
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="font-hand text-2xl text-muted">my projects</p>
+                <h2 className="mt-1 font-hand text-4xl md:text-5xl">
+                  个人项目
+                </h2>
+              </div>
+              <GithubIcon className="h-9 w-9 text-ink/70" />
+            </div>
+          </Reveal>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, index) => (
+              <Reveal key={project.name} delay={index * 80}>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="blog-card-hover hand-card-tight group flex h-full flex-col p-6"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="truncate font-hand text-2xl leading-tight">
+                      {project.name}
+                    </h3>
+                    <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition group-hover:text-orange" />
+                  </div>
+                  <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-ink/70">
+                    {project.description || "暂无简介"}
+                  </p>
+                  <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
+                    {project.language && (
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className="h-2.5 w-2.5 rounded-full"
+                          style={{
+                            backgroundColor: languageColor(project.language),
+                          }}
+                        />
+                        {project.language}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Star className="h-3.5 w-3.5" />
+                      {project.stars}
+                    </span>
+                    {project.updatedAt && (
+                      <span>{project.updatedAt.slice(0, 10)}</span>
+                    )}
+                  </div>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-6xl px-5 pb-8 md:px-8">
         <div className="grid gap-5 md:grid-cols-3">

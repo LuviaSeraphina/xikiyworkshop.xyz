@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { RefreshCw, Save } from "lucide-react";
+import { cn } from "@/lib/format";
 import type { SiteConfig, TechItem } from "@/lib/types";
 import { Field, PanelCard, PrimaryButton, inputClass } from "./ui";
 
-export default function SitePanel({
+type AdminProject = {
+  name: string;
+  description: string;
+  language: string;
+  stars: number;
+  updatedAt: string;
+  selected: boolean;
+};
+
+export default function HomePanel({
   initialSite,
 }: {
   initialSite: SiteConfig;
@@ -21,16 +31,78 @@ export default function SitePanel({
       )
       .join("\n")
   );
-  const [friendsText, setFriendsText] = useState(() =>
-    JSON.stringify(initialSite.friends, null, 2)
-  );
-  const [treasuresText, setTreasuresText] = useState(() =>
-    JSON.stringify(initialSite.treasures, null, 2)
-  );
   const [navText, setNavText] = useState(() =>
     JSON.stringify(initialSite.nav, null, 2)
   );
   const [saved, setSaved] = useState(false);
+  const [githubProjects, setGithubProjects] = useState<AdminProject[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(false);
+
+  const loadGithubProjects = async () => {
+    setProjectsLoading(true);
+    setProjectsError(false);
+    try {
+      const res = await fetch("/api/dev/github-projects");
+      if (!res.ok) throw new Error("load failed");
+      const data = (await res.json()) as { projects?: AdminProject[] };
+      setGithubProjects(data.projects ?? []);
+    } catch {
+      setProjectsError(true);
+    } finally {
+      setProjectsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/dev/github-projects")
+      .then((res) => {
+        if (!res.ok) throw new Error("load failed");
+        return res.json() as Promise<{ projects?: AdminProject[] }>;
+      })
+      .then((data) => {
+        if (!cancelled) setGithubProjects(data.projects ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setProjectsError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setProjectsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const toggleProject = async (name: string) => {
+    const current = githubProjects.find((project) => project.name === name);
+    if (!current) return;
+    setGithubProjects((projects) =>
+      projects.map((project) =>
+        project.name === name
+          ? { ...project, selected: !project.selected }
+          : project
+      )
+    );
+    try {
+      const res = await fetch("/api/dev/github-projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!res.ok) throw new Error("toggle failed");
+    } catch {
+      setGithubProjects((projects) =>
+        projects.map((project) =>
+          project.name === name
+            ? { ...project, selected: !project.selected }
+            : project
+        )
+      );
+      window.alert("切换失败，请重试");
+    }
+  };
 
   const set = <K extends keyof SiteConfig>(key: K, value: SiteConfig[K]) => {
     setSite((current) => ({ ...current, [key]: value }));
@@ -64,15 +136,11 @@ export default function SitePanel({
       .filter((tech) => tech.name);
 
   const save = async () => {
-    let friends = site.friends;
-    let treasures = site.treasures;
     let nav = site.nav;
     try {
-      friends = JSON.parse(friendsText);
-      treasures = JSON.parse(treasuresText);
       nav = JSON.parse(navText);
     } catch {
-      window.alert("友链 / 宝藏链接 / 导航的 JSON 格式错误");
+      window.alert("导航 JSON 格式错误");
       return;
     }
 
@@ -80,15 +148,27 @@ export default function SitePanel({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...site,
+        siteName: site.siteName,
+        author: site.author,
+        domain: site.domain,
+        heroTitle: site.heroTitle,
+        motto: site.motto,
+        blogMotto: site.blogMotto,
+        intro: site.intro,
+        profile: site.profile,
+        stats: site.stats,
         currentTarget: {
-          ...site.currentTarget,
-          items: targetText.split("\n").map((item) => item.trim()).filter(Boolean),
+          title: site.currentTarget.title,
+          items: targetText
+            .split("\n")
+            .map((item) => item.trim())
+            .filter(Boolean),
         },
         techStack: parseTech(techText),
-        friends,
-        treasures,
         nav,
+        footerText: site.footerText,
+        heroImages: site.heroImages,
+        updatedAt: site.updatedAt,
       }),
     });
     setSaved(true);
@@ -194,22 +274,8 @@ export default function SitePanel({
         </Field>
       </PanelCard>
 
-      <PanelCard title="链接与导航">
-        <Field label="友情链接 JSON">
-          <textarea
-            className={`${inputClass} min-h-36 resize-y font-mono text-xs`}
-            value={friendsText}
-            onChange={(event) => setFriendsText(event.target.value)}
-          />
-        </Field>
-        <Field label="宝藏链接 JSON" className="mt-3">
-          <textarea
-            className={`${inputClass} min-h-36 resize-y font-mono text-xs`}
-            value={treasuresText}
-            onChange={(event) => setTreasuresText(event.target.value)}
-          />
-        </Field>
-        <Field label="导航 JSON" className="mt-3">
+      <PanelCard title="导航">
+        <Field label="导航 JSON">
           <textarea
             className={`${inputClass} min-h-28 resize-y font-mono text-xs`}
             value={navText}
@@ -218,9 +284,75 @@ export default function SitePanel({
         </Field>
       </PanelCard>
 
+      <PanelCard title="GitHub 项目">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <p className="text-sm text-muted">
+            {site.profile.githubName} 的公开仓库
+          </p>
+          <button
+            type="button"
+            onClick={() => void loadGithubProjects()}
+            className="btn-ghost h-9 px-3 text-xs"
+          >
+            <RefreshCw className="mr-1.5 inline h-3.5 w-3.5" />
+            刷新
+          </button>
+        </div>
+        {projectsLoading ? (
+          <p className="py-6 text-center text-sm text-muted">加载中...</p>
+        ) : projectsError ? (
+          <p className="py-6 text-center text-sm text-muted">
+            加载失败，请稍后重试
+          </p>
+        ) : githubProjects.length === 0 ? (
+          <p className="py-6 text-center text-sm text-muted">
+            没有找到公开仓库
+          </p>
+        ) : (
+          <div className="max-h-[45vh] space-y-2 overflow-y-auto pr-1">
+            {githubProjects.map((project) => (
+              <button
+                key={project.name}
+                type="button"
+                onClick={() => void toggleProject(project.name)}
+                className={cn(
+                  "flex w-full items-center justify-between gap-3 rounded-xl border-2 px-3 py-2.5 text-left transition",
+                  project.selected
+                    ? "border-orange/60 bg-orange/5 hover:bg-orange/10"
+                    : "border-line bg-cream hover:border-orange/40"
+                )}
+              >
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold">
+                    {project.name}
+                  </span>
+                  <span className="mt-0.5 block truncate text-xs text-muted">
+                    {project.language && `${project.language} · `}
+                    {project.stars} star
+                    {project.updatedAt
+                      ? ` · ${project.updatedAt.slice(0, 10)}`
+                      : ""}
+                  </span>
+                </span>
+                <span
+                  className={cn(
+                    "shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold",
+                    project.selected
+                      ? "bg-leaf/15 text-leaf"
+                      : "bg-ink/5 text-muted"
+                  )}
+                >
+                  {project.selected ? "展示" : "不展示"}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </PanelCard>
+
       <PrimaryButton onClick={save} className="h-12 px-8">
         <Save className="mr-2 inline h-4 w-4" />
-        {saved ? "已保存" : "保存站点配置"}
+        {saved ? "已保存" : "保存主页配置"}
       </PrimaryButton>
     </div>
   );

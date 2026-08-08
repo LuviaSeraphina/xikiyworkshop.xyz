@@ -4,15 +4,17 @@ import { useState } from "react";
 import {
   Cloud,
   FileText,
+  Heart,
+  Home,
   Image as ImageIcon,
-  Settings2,
   Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/format";
 import CloudPanel from "./cloud-panel";
+import FriendsPanel from "./friends-panel";
+import HomePanel from "./home-panel";
 import ImagesPanel from "./images-panel";
 import PostsPanel from "./posts-panel";
-import SitePanel from "./site-panel";
 import type { CloudConfig, SiteConfig } from "@/lib/types";
 import type { ImageEntry, PostListItem } from "./types";
 
@@ -20,7 +22,8 @@ const tabs = [
   { id: "posts", label: "博客", icon: FileText },
   { id: "images", label: "图片", icon: ImageIcon },
   { id: "cloud", label: "云盘", icon: Cloud },
-  { id: "site", label: "站点配置", icon: Settings2 },
+  { id: "home", label: "主页", icon: Home },
+  { id: "friends", label: "友链", icon: Heart },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -78,7 +81,8 @@ export default function AdminShell({
           {active === "cloud" && (
             <CloudPanel initialConfig={initialCloud} />
           )}
-          {active === "site" && <SitePanel initialSite={initialSite} />}
+          {active === "home" && <HomePanel initialSite={initialSite} />}
+          {active === "friends" && <FriendsPanel initialSite={initialSite} />}
         </div>
       </div>
     </div>

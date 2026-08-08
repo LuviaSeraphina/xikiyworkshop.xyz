@@ -71,9 +71,15 @@
   "treasures": [
     {
       "name": "regex101",
-      "description": "测试正则表达式的匹配是否正常",
+      "description": "测试正则表达式",
       "url": "https://regex101.com/",
       "image": "/images/regex101.png"
+    },
+    {
+      "name": "draw.io",
+      "description": "免费的在线图表绘制工具",
+      "url": "https://www.drawio.com/",
+      "image": "/images/draw.io.jpg"
     }
   ],
   "nav": [

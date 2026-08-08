@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -23,6 +23,12 @@ export default function SiteHeader({
   const [hidden, setHidden] = useState(false);
   const [overHero, setOverHero] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const handleSearchOpenChange = useCallback((next: boolean) => {
+    setSearchOpen(next);
+    if (next) setMobileOpen(false);
+  }, []);
 
   const devMode =
     process.env.NEXT_PUBLIC_DEVELOPER_MODE === "true";
@@ -72,6 +78,7 @@ export default function SiteHeader({
       >
         <Link
           href="/"
+          onClick={() => setSearchOpen(false)}
           className="font-hand text-3xl leading-none drop-shadow-sm"
         >
           {siteName}
@@ -82,6 +89,7 @@ export default function SiteHeader({
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setSearchOpen(false)}
               className={cn(
                 "rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-white/15",
                 isActive(item.href) && "underline decoration-orange decoration-2 underline-offset-8"
@@ -91,10 +99,16 @@ export default function SiteHeader({
             </Link>
           ))}
           <span className="mx-1 h-5 w-px bg-current opacity-20" />
-          <SearchDialog posts={posts} />
+          <SearchDialog
+            posts={posts}
+            open={searchOpen}
+            onOpenChange={handleSearchOpenChange}
+            onNavigate={() => setMobileOpen(false)}
+          />
           {devMode && (
             <Link
               href="/admin/"
+              onClick={() => setSearchOpen(false)}
               className="btn-ink ml-1 h-9 px-3 text-xs"
             >
               管理
@@ -103,10 +117,18 @@ export default function SiteHeader({
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <SearchDialog posts={posts} />
+          <SearchDialog
+            posts={posts}
+            open={searchOpen}
+            onOpenChange={handleSearchOpenChange}
+            onNavigate={() => setMobileOpen(false)}
+          />
           <button
             type="button"
-            onClick={() => setMobileOpen((value) => !value)}
+            onClick={() => {
+              setSearchOpen(false);
+              setMobileOpen((value) => !value);
+            }}
             className="btn-ghost h-10 w-10 px-0"
             aria-label="菜单"
           >
@@ -122,7 +144,10 @@ export default function SiteHeader({
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  setSearchOpen(false);
+                  setMobileOpen(false);
+                }}
                 className={cn(
                   "rounded-lg px-3 py-2.5 font-medium",
                   isActive(item.href) && "bg-orange/10 text-orange"
@@ -134,7 +159,10 @@ export default function SiteHeader({
             {devMode && (
               <Link
                 href="/admin/"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  setSearchOpen(false);
+                  setMobileOpen(false);
+                }}
                 className="btn-ink h-10"
               >
                 管理后台

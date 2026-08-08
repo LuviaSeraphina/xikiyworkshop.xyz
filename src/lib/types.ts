@@ -76,6 +76,16 @@ export type CloudConfig = {
   tree: CloudNode[];
 };
 
+export type Project = {
+  name: string;
+  url: string;
+  description: string;
+  language: string;
+  stars: number;
+  updatedAt: string;
+  homepage?: string;
+};
+
 export type PostMeta = {
   slug: string;
   title: string;

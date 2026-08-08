@@ -22,6 +22,12 @@ export async function POST(request: Request) {
   const denied = devBlocked();
   if (denied) return denied;
   const payload = await request.json();
-  await fs.writeFile(filePath, JSON.stringify(payload, null, 2), "utf-8");
+  const raw = await fs.readFile(filePath, "utf-8");
+  const current = JSON.parse(raw) as Record<string, unknown>;
+  await fs.writeFile(
+    filePath,
+    JSON.stringify({ ...current, ...payload }, null, 2),
+    "utf-8"
+  );
   return NextResponse.json({ ok: true });
 }
