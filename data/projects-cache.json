@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-09-04T17:19:08.687Z",
+  "projects": {
+    "SLIC_OpsBot": {
+      "name": "SLIC_OpsBot",
+      "url": "https://github.com/LuviaSeraphina/SLIC_OpsBot",
+      "description": "一款用自然语言管理 Linux 服务器的轻量级智能运维 Agent",
+      "language": "Python",
+      "stars": 0,
+      "updatedAt": "2026-08-25T09:16:10Z",
+      "homepage": ""
+    },
+    "SRE-study": {
+      "name": "SRE-study",
+      "url": "https://github.com/LuviaSeraphina/SRE-study",
+      "description": "",
+      "language": "Python",
+      "stars": 1,
+      "updatedAt": "2026-05-28T05:56:58Z"
+    },
+    "xikiyworkshop.xyz": {
+      "name": "xikiyworkshop.xyz",
+      "url": "https://github.com/LuviaSeraphina/xikiyworkshop.xyz",
+      "description": "",
+      "language": "TypeScript",
+      "stars": 0,
+      "updatedAt": "2026-09-04T17:00:50Z",
+      "homepage": "xikiyworkshop.xyz"
+    }
+  }
+}
