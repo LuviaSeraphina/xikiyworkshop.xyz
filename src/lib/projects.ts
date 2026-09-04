@@ -61,14 +61,23 @@ function toProject(
 async function fetchRepo(
   owner: string,
   item: ConfiguredProject
-): Promise<Project> {
+): Promise<Project | null> {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${item.name}`,
-      { cache: "force-cache" }
+      { redirect: "manual" }
     );
+    if (
+      res.status === 301 ||
+      res.status === 308 ||
+      res.status === 404 ||
+      res.status === 410
+    ) {
+      return null;
+    }
     if (!res.ok) throw new Error(`GitHub ${res.status}`);
     const repo = (await res.json()) as GitHubRepo;
+    if (repo.name !== item.name) return null;
     return toProject(repo.name || item.name, repo, item.note);
   } catch {
     return {
@@ -103,7 +112,8 @@ export async function fetchGitHubRepos(
 export async function getProjects(owner: string): Promise<Project[]> {
   const configured = await getConfiguredProjects();
   if (configured.length === 0) return [];
-  return Promise.all(
+  const projects = await Promise.all(
     configured.map((item) => fetchRepo(owner, item))
   );
+  return projects.filter((project): project is Project => project !== null);
 }
