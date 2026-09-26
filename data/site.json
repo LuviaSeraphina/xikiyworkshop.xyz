@@ -80,6 +80,12 @@
       "description": "免费的在线图表绘制工具",
       "url": "https://www.drawio.com/",
       "image": "/images/draw.io.jpg"
+    },
+    {
+      "name": "paper.dou.ac",
+      "description": "每日论文",
+      "url": "https://paper.dou.ac/",
+      "image": "/images/paper.dou.ac.png"
     }
   ],
   "nav": [

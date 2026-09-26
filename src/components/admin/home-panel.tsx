@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { RefreshCw, Save } from "lucide-react";
-import { cn } from "@/lib/format";
+import { cn, formatTimestampDate } from "@/lib/format";
 import type { SiteConfig, TechItem } from "@/lib/types";
 import { Field, PanelCard, PrimaryButton, inputClass } from "./ui";
 
@@ -330,7 +330,7 @@ export default function HomePanel({
                     {project.language && `${project.language} · `}
                     {project.stars} star
                     {project.updatedAt
-                      ? ` · ${project.updatedAt.slice(0, 10)}`
+                      ? ` · ${formatTimestampDate(project.updatedAt)}`
                       : ""}
                   </span>
                 </span>

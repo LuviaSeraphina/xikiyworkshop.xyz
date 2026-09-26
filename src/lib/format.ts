@@ -20,6 +20,20 @@ export function formatDateValue(value: unknown): string {
   return String(value ?? "");
 }
 
+export function formatTimestampDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const part = (type: string) =>
+    parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
 export function encodeSegment(value: string): string {
   return encodeURIComponent(value).replace(/\./g, "%2E");
 }

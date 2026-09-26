@@ -13,6 +13,7 @@ import GithubIcon from "@/components/github-icon";
 import Reveal from "@/components/reveal";
 import Typewriter from "@/components/typewriter";
 import { getSiteConfig } from "@/lib/data";
+import { formatTimestampDate } from "@/lib/format";
 import { getPostSummaries } from "@/lib/posts";
 import { getProjects } from "@/lib/projects";
 
@@ -234,7 +235,7 @@ export default async function HomePage() {
                       {project.stars}
                     </span>
                     {project.updatedAt && (
-                      <span>{project.updatedAt.slice(0, 10)}</span>
+                      <span>{formatTimestampDate(project.updatedAt)}</span>
                     )}
                   </div>
                 </a>
